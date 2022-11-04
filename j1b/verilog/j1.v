@@ -6,7 +6,7 @@ module j1(
 
   output wire io_rd,
   output wire io_wr,
-  output wire [15:0] mem_addr,
+  output wire [`WIDTH-1:0] mem_addr,
   output wire mem_wr,
   output wire [`WIDTH-1:0] dout,
   input  wire [`WIDTH-1:0] mem_din,
@@ -27,7 +27,7 @@ module j1(
   reg reboot = 1;
   wire [12:0] pc_plus_1 = pc + 1;
 
-  assign mem_addr = st0[15:0];
+  assign mem_addr = st0;
   assign code_addr = {pcN};
 
   // The D and R stacks

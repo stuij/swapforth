@@ -45,11 +45,11 @@ end
  
 endmodule
 
-// A 32Kbyte RAM (8192x32) with two ports:
+// A 32KByte RAM (8192x32) with two ports:
 //   port a, 32 bits read/write 
 //   port b, 16 bits read-only, lower 16K only
 
-module ram16k(
+module ram32KB(
   input wire        clk,
 
   input  wire[15:0] a_addr,

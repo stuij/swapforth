@@ -55,7 +55,7 @@ module ulx3s_top(
      .tx_data(dout_[7:0]),
      .rx_data(uart0_data));
 
-  wire [15:0] mem_addr;
+  wire [31:0] mem_addr;
   wire [31:0] mem_din;
   wire mem_wr;
   wire [31:0] dout;
@@ -82,8 +82,8 @@ module ulx3s_top(
      .insn(insn)
      );
 
-  ram16k ram(.clk(fclk),
-             .a_addr(mem_addr),
+  ram32KB ram(.clk(fclk),
+             .a_addr(mem_addr[15:0]),
              .a_q(mem_din),
              .a_wr(mem_wr),
              .a_d(dout),
@@ -91,7 +91,7 @@ module ulx3s_top(
              .b_q(insn));
 
   reg io_wr_, io_rd_;
-  reg [15:0] mem_addr_;
+  reg [31:0] mem_addr_;
   reg [31:0] dout_;
   always @(posedge fclk)
     {io_wr_, io_rd_, mem_addr_, dout_} <= {io_wr, io_rd, mem_addr, dout};
@@ -126,7 +126,7 @@ module ulx3s_top(
   reg [27:0] gn_dir;   // 1:output, 0:input
 
   always @(posedge fclk) begin
-    casez (mem_addr)
+    casez (mem_addr[15:0])
       16'h00??: din <= gp_i[mem_addr[6:0]];
       16'h01??: din <= gp_dir[mem_addr[6:0]];
       16'h02??: din <= gn_i[mem_addr[6:0]];
@@ -147,7 +147,7 @@ module ulx3s_top(
     endcase
 
     if (io_wr_) begin
-      casez (mem_addr_)
+      casez (mem_addr_[15:0])
         16'h00??: gp_o[mem_addr_[6:0]] <= dout_[0];
         16'h01??: gp_dir[mem_addr_[6:0]] <= dout_[0];
         16'h02??: gn_o[mem_addr_[6:0]] <= dout_[0];
@@ -169,7 +169,7 @@ module ulx3s_top(
     assign gn_i[i] = gn[i];
   end
 
-  assign uart0_wr = io_wr_ & (mem_addr_ == 16'h1000);
-  assign uart0_rd = io_rd_ & (mem_addr_ == 16'h1000);
+  assign uart0_wr = io_wr_ & (mem_addr_ == 32'h1000);
+  assign uart0_rd = io_rd_ & (mem_addr_ == 32'h1000);
 
 endmodule
